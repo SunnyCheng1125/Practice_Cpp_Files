@@ -1,0 +1,25 @@
+export opts= \
+            -fno-diagnostics-show-option -fstack-protector-all -g -O9 \
+            -std=c++14 -Wctor-dtor-privacy -Werror -Wextra -Wfatal-errors \
+            -Winit-self -Wlogical-op -Wold-style-cast -Wpedantic -Wshadow \
+            -Wunused-const-variable=1 -Wzero-as-null-pointer-constant \
+            -Wduplicated-cond -Wduplicated-branches -Walloc-zero -Walloca
+    CXXFLAGS=-Wall $$opts
+
+    assignment=hw4
+    lib=$(assignment).a
+
+    $(lib): Alpha.o PGM.o 
+	$(AR) -rcs $@ $?
+
+    Alpha.o:: Alpha.cc Alpha.h
+    PGM.o:: PGM.cc PGM.h
+    tar:
+	tar -cv $(MAKEFILE_LIST) *.cc *.h >$(assignment).tar
+
+    test: $(lib)
+	$(CXX) $(CXXFLAGS) test.cc $(lib)
+	./a.out
+
+    clean:
+	rm -f $(assignment) $(assignment).{a,tar} *.o *.gch a.out
